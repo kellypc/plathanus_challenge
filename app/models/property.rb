@@ -4,6 +4,7 @@ class Property < ApplicationRecord
   validates :name, presence: true
 
   def cover_photo
-    photos.to_a[2]
+    return nil if photos.size < 3
+    photos[2].image if photos[2].image.attached?
   end
 end
