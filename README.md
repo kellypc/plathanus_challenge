@@ -77,3 +77,6 @@ http://localhost:3000
 
 - storage/ – Armazenamento local das fotos via ActiveStorage
 
+<img width="1371" height="745" alt="Captura de Tela 2025-09-20 às 20 00 48" src="https://github.com/user-attachments/assets/498a1aa7-35a7-4ff3-9c03-6f64382ce0bc" />
+
+  
