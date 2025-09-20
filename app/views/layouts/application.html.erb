@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Properties App" %></title>
+    <title><%= content_for(:title) || "Elo Properties" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= yield :head %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -23,19 +19,14 @@
     <!-- Navbar -->
     <header class="bg-white shadow-md fixed w-full z-50">
       <div class="container mx-auto px-5 flex items-center justify-between h-16">
-        <!-- Logo -->
-        <a href="<%= root_path %>" class="text-2xl font-bold text-indigo-600">
-          Elo Properties
-        </a>
+        <a href="<%= root_path %>" class="text-2xl font-bold text-indigo-600">Elo Properties</a>
 
-        <!-- Links principais (desktop) -->
         <nav class="hidden md:flex space-x-6">
           <a href="#properties" class="text-gray-700 hover:text-indigo-600 font-medium">Propriedades</a>
           <a href="#about" class="text-gray-700 hover:text-indigo-600 font-medium">Sobre</a>
           <a href="#contact" class="text-gray-700 hover:text-indigo-600 font-medium">Contato</a>
         </nav>
 
-        <!-- Botão de ação (desktop) -->
         <div class="hidden md:block">
           <a href="#contact"
              class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full shadow hover:bg-indigo-700 transition">
@@ -43,15 +34,11 @@
           </a>
         </div>
 
-        <!-- Botão menu mobile -->
         <div class="md:hidden">
-          <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
-            ☰
-          </button>
+          <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">☰</button>
         </div>
       </div>
 
-      <!-- Menu mobile -->
       <div id="mobile-menu" class="hidden md:hidden bg-white">
         <a href="#properties" class="block px-5 py-2 text-gray-700 hover:bg-gray-100">Propriedades</a>
         <a href="#about" class="block px-5 py-2 text-gray-700 hover:bg-gray-100">Sobre</a>
@@ -61,20 +48,19 @@
     </header>
 
     <!-- Conteúdo principal -->
-    <main class="pt-20 container mx-auto mt-8 px-5 flex flex-col">
+    <main class="pt-20">
       <%= yield %>
     </main>
 
+    <!-- Footer simples -->
+    <footer class="bg-gray-100 mt-20 py-10 text-center text-gray-600">
+      &copy; <%= Time.now.year %> Elo Properties. Todos os direitos reservados.
+    </footer>
+
     <script>
-      // Toggle menu mobile
       const btn = document.getElementById('mobile-menu-button')
       const menu = document.getElementById('mobile-menu')
-      if (btn) {
-        btn.addEventListener('click', () => {
-          menu.classList.toggle('hidden')
-        })
-      }
+      if (btn) btn.addEventListener('click', () => menu.classList.toggle('hidden'))
     </script>
-
   </body>
 </html>

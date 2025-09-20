@@ -2,41 +2,28 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["image", "indicator"]
-  static values = { index: Number, interval: Number }
+  static values = { index: Number }
 
   connect() {
-    if (this.indexValue == null) this.indexValue = 2
-    if (this.intervalValue == null) this.intervalValue = 5000
+    const images = this.imageTargets
+    if (images.length === 0) return
 
-    if (this.imageTargets.length === 0) return
+    // Usar a terceira foto como cover se existir
+    this.indexValue = Math.min(2, images.length - 1)
 
-    // Garantir que todas as imagens carregaram
-    const promises = this.imageTargets.map(img => 
-      img.complete ? Promise.resolve() : new Promise(resolve => img.addEventListener('load', resolve))
-    )
-
-    Promise.all(promises).then(() => {
-      this.indexValue = Math.min(this.indexValue, this.imageTargets.length - 1)
-      this.show()
-      this.startAutoplay()
+    let loadedCount = 0
+    images.forEach(img => {
+      if (img.complete) {
+        loadedCount++
+      } else {
+        img.addEventListener('load', () => {
+          loadedCount++
+          if (loadedCount === images.length) this.show()
+        })
+      }
     })
 
-    // Pausar autoplay quando o mouse estiver sobre o carrossel
-    this.element.addEventListener('mouseenter', () => this.stopAutoplay())
-    this.element.addEventListener('mouseleave', () => this.startAutoplay())
-  }
-
-  disconnect() {
-    this.stopAutoplay()
-  }
-
-  startAutoplay() {
-    this.stopAutoplay()
-    this.autoplayTimer = setInterval(() => this.next(), this.intervalValue)
-  }
-
-  stopAutoplay() {
-    if (this.autoplayTimer) clearInterval(this.autoplayTimer)
+    if (loadedCount === images.length) this.show()
   }
 
   next() {
@@ -53,16 +40,21 @@ export default class extends Controller {
 
   show() {
     this.imageTargets.forEach((el, i) => {
-      el.style.opacity = i === this.indexValue ? '1' : '0'
-      el.style.zIndex = i === this.indexValue ? '10' : '0'
-      el.style.pointerEvents = i === this.indexValue ? 'auto' : 'none'
+      if (i === this.indexValue) {
+        el.style.opacity = '1'
+        el.style.zIndex = '10'
+        el.style.pointerEvents = 'auto'
+      } else {
+        el.style.opacity = '0'
+        el.style.zIndex = '0'
+        el.style.pointerEvents = 'none'
+      }
     })
 
     if (this.hasIndicatorTargets) {
       this.indicatorTargets.forEach((dot, i) => {
         dot.classList.toggle('bg-white', i === this.indexValue)
         dot.classList.toggle('bg-gray-300', i !== this.indexValue)
-        dot.style.opacity = '1'
       })
     }
   }
