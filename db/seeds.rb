@@ -1,9 +1,26 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+require "faker"
+
+puts "Cleaning database..."
+Property.destroy_all
+
+images_path = Rails.root.join("db", "seeds", "images")
+images_files = Dir.children(images_path)
+
+puts "Creating properties..."
+
+50.times do |i|
+  property = Property.create!(
+    name: Faker::Address.unique.community
+  )
+
+  rand(3..5).times do
+    file_name = images_files.sample
+    file_path = File.join(images_path, file_name)
+
+    property.photos.create!(
+      image: Rack::Test::UploadedFile.new(file_path, "image/jpeg")
+    )
+  end
+end
+
+puts "✅ Done! Created #{Property.count} properties with photos"
